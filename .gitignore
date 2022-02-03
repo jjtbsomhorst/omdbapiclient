@@ -1,2 +1,4 @@
 .idea
 docker-compose.yml
+src/vendor
+composer.lock

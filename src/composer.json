@@ -1,0 +1,25 @@
+{
+    "name": "jjtbsomhorst/omdbapi",
+    "description": "omdb api client",
+    "type": "library",
+    "require": {
+        "symfony/serializer": "6.1.x-dev",
+        "symfony/property-access": "6.1.x-dev",
+        "guzzlehttp/guzzle": "7.4.x-dev"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "7.4.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jjtbsomhorst\\Omdbapi\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "jjtb somhorst",
+            "email": "j.somhorst@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  web:
+    image: "php_8.0.7_composer"
+    build: ../docker/php
+    restart: 'always'
+    ports:
+      - '80:80'
+    volumes:
+      - ./src:/var/www/html/
+  composer:
+    image: composer:latest
+    command: ["composer", "install"]
+    volumes:
+      - ./src:/app
