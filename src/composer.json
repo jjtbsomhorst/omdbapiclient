@@ -6,7 +6,8 @@
         "symfony/serializer": "6.1.x-dev",
         "symfony/property-access": "6.1.x-dev",
         "guzzlehttp/guzzle": "7.4.x-dev",
-        "doctrine/annotations": "1.14.x-dev"
+        "doctrine/annotations": "1.14.x-dev",
+        "phpdocumentor/reflection-docblock": "5.x-dev"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "7.4.x-dev"
