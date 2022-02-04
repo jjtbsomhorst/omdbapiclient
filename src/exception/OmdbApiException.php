@@ -1,6 +1,6 @@
 <?php
 
-namespace exception;
+namespace jjtbsomhorst\omdbapi\exception;
 
 use Throwable;
 

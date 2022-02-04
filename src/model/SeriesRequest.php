@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace jjtbsomhorst\omdbapi\model;
 
 class SeriesRequest extends BaseIdentifierRequest
 {

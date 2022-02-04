@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace jjtbsomhorst\omdbapi\model;
 
 use GuzzleHttp\Psr7\Response;
 

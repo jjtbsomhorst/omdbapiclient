@@ -1,16 +1,26 @@
 <?php
-namespace model;
+namespace jjtbsomhorst\omdbapi\model;
+
+use Psr\Http\Message\ResponseInterface;
 
 abstract class BaseApiRequest
 {
     private array $params = [];
     private string $apikey = "";
     private string $host;
+    protected string|int $proxy;
 
     public function apiKey($key): BaseApiRequest{
         $this->apikey = $key;
+        $this->setKey("apikey",$this->apikey);
         return $this;
     }
+
+    public function proxy(string $host, int $port) : BaseApiRequest{
+        $this->proxy = $host.":".$port;
+        return $this;
+    }
+
     /**
      * @return array
      */
@@ -74,6 +84,5 @@ abstract class BaseApiRequest
         return $this->host;
     }
 
-
-
+    protected abstract function transform(ResponseInterface $response);
 }

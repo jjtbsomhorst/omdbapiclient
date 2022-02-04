@@ -1,14 +1,13 @@
 <?php
 
-namespace model;
+namespace jjtbsomhorst\omdbapi\model;
 
-use exception\OmdbApiException;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
+use jjtbsomhorst\omdbapi\exception\OmdbApiException;
 use Psr\Http\Message\ResponseInterface;
 
-class BaseIdentifierRequest extends BaseApiRequest
+abstract class BaseIdentifierRequest extends BaseApiRequest
 {
     public function byTitle($title): BaseIdentifierRequest
     {
@@ -27,14 +26,15 @@ class BaseIdentifierRequest extends BaseApiRequest
     public function execute() : ResponseInterface{
         $client = new Client();
         try{
-            return $client->request('GET',$this->getHost(),['query' => $this->getParams()]);
+            $properties = [];
+            $properties['query'] = $this->getParams();
+            if(!empty($this->proxy) && !is_null($this->proxy)){
+                $properties['proxy'] = $this->proxy;
+            }
+            return $this->transform($client->request('GET',$this->getHost(),$properties));
         } catch (GuzzleException $e) {
             throw new OmdbApiException($e);
         }
-
-
     }
-
-
 
 }
