@@ -107,7 +107,7 @@ abstract class BaseApiRequest
         return $this->host;
     }
 
-    public function execute() : ResponseInterface{
+    public function execute(bool $deserialize = true) : ResponseInterface{
         $client = new Client();
         try{
             $properties = [];
@@ -120,7 +120,10 @@ abstract class BaseApiRequest
             if($response->getStatusCode() != 200){
                 throw new OmdbApiException($response->getReasonPhrase(),$response->getStatusCode());
             }
-            return $this->transform($response);
+            if($deserialize) {
+                return $this->transform($response);
+            }
+            return $response;
         } catch (GuzzleException $e) {
             throw new OmdbApiException($e);
         }
