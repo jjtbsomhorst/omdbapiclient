@@ -69,7 +69,7 @@ class MovieResult extends Response
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getYear(): string
     {
@@ -77,7 +77,7 @@ class MovieResult extends Response
     }
 
     /**
-     * @param int $year
+     * @param string $year
      */
     public function setYear(string $year): void
     {
@@ -85,7 +85,7 @@ class MovieResult extends Response
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getRated(): string
     {
@@ -93,7 +93,7 @@ class MovieResult extends Response
     }
 
     /**
-     * @param float $rated
+     * @param string $rated
      */
     public function setRated(string $rated): void
     {
@@ -277,7 +277,7 @@ class MovieResult extends Response
     }
 
     /**
-     * @return  jjtbsomhorst\omdbapi\model\MovieRating[]
+     * @return  MovieRating[]
      */
     public function getRatings(): array
     {
@@ -289,13 +289,7 @@ class MovieResult extends Response
      */
     public function setRatings(array $ratings): void
     {
-        $this->ratings = [];
-        foreach($ratings as $r){
-            $rating = new MovieRating();
-            $rating->setValue($r['Value']);
-            $rating->setSource($r['Source']);
-            $this->ratings[] = $rating;
-        }
+        $this->ratings = $ratings;
     }
 
     /**
