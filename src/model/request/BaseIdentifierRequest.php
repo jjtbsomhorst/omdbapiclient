@@ -1,6 +1,6 @@
 <?php
 
-namespace jjtbsomhorst\omdbapi\model;
+namespace jjtbsomhorst\omdbapi\model\request;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
@@ -23,18 +23,6 @@ abstract class BaseIdentifierRequest extends BaseApiRequest
         return $this;
     }
 
-    public function execute() : ResponseInterface{
-        $client = new Client();
-        try{
-            $properties = [];
-            $properties['query'] = $this->getParams();
-            if(!empty($this->proxy) && !is_null($this->proxy)){
-                $properties['proxy'] = $this->proxy;
-            }
-            return $this->transform($client->request('GET',$this->getHost(),$properties));
-        } catch (GuzzleException $e) {
-            throw new OmdbApiException($e);
-        }
-    }
+
 
 }
