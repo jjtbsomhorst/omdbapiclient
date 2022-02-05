@@ -1,11 +1,16 @@
 <?php
+
 namespace jjtbsomhorst\omdbapi\model\request;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\HandlerStack;
 use jjtbsomhorst\omdbapi\exception\OmdbApiException;
-use jjtbsomhorst\omdbapi\model\response\MovieResult;
+use Kevinrob\GuzzleCache\CacheMiddleware;
+use Kevinrob\GuzzleCache\Storage\Psr6CacheStorage;
+use Kevinrob\GuzzleCache\Strategy\GreedyCacheStrategy;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -23,16 +28,34 @@ abstract class BaseApiRequest
     private array $params = [];
     private string $apikey = "";
     private string $host;
-    protected string|int $proxy;
+    protected string $proxy;
+    private CacheItemPoolInterface $cachePool;
 
-    public function apiKey($key): BaseApiRequest{
+    public function apiKey($key): BaseApiRequest
+    {
         $this->apikey = $key;
-        $this->setKey("apikey",$this->apikey);
+        $this->setKey("apikey", $this->apikey);
         return $this;
     }
 
-    public function proxy(string $host, int $port) : BaseApiRequest{
-        $this->proxy = $host.":".$port;
+    protected function cachePool(CacheItemPoolInterface $pool): BaseApiRequest
+    {
+        $this->cachePool = $pool;
+        return $this;
+    }
+
+    public function proxy(string $host, int $port): BaseApiRequest
+    {
+        if(!is_null($host) && !empty($host) && $port > -1){
+            $this->proxy = $host . ":" . $port;
+        }
+
+        return $this;
+    }
+
+    public function cache($cache): BaseApiRequest
+    {
+        $this->cachePool = $cache;
         return $this;
     }
 
@@ -58,7 +81,7 @@ abstract class BaseApiRequest
 
     protected function getKey(string $key)
     {
-        if(array_key_exists($key,$this->params)){
+        if (array_key_exists($key, $this->params)) {
             return $this->params[$key];
         }
         return null;
@@ -94,7 +117,8 @@ abstract class BaseApiRequest
         return $this;
     }
 
-    public function host(string $host): BaseApiRequest{
+    public function host(string $host): BaseApiRequest
+    {
         $this->host = $host;
         return $this;
     }
@@ -107,20 +131,46 @@ abstract class BaseApiRequest
         return $this->host;
     }
 
-    public function execute(bool $deserialize = true) : ResponseInterface{
-        $client = new Client();
-        try{
+    private function getClient(): Client
+    {
+        $props = [];
+        $props['base_uri'] = $this->getHost();
+        if (!empty($this->proxy) && !is_null($this->proxy)) {
+            $props['proxy'] = $this->proxy;
+        }
+
+        if (!is_null($this->cachePool) && !empty($this->cachePool)) {
+            $stack = HandlerStack::create();
+            $stack->push(
+                new CacheMiddleware(
+                    new GreedyCacheStrategy(
+                        new Psr6CacheStorage(
+                            $this->cachePool),
+                        1800,
+                    )
+                )
+                ,
+                'cache'
+            );
+            $props['handler'] = $stack;
+        }
+
+        return new Client($props);
+    }
+
+    public function execute(bool $deserialize = true): ResponseInterface
+    {
+
+        try {
+
             $properties = [];
             $properties['query'] = $this->getParams();
-            if(!empty($this->proxy) && !is_null($this->proxy)){
-                $properties['proxy'] = $this->proxy;
-            }
 
-            $response = $client->request('GET',$this->getHost(),$properties);
-            if($response->getStatusCode() != 200){
-                throw new OmdbApiException($response->getReasonPhrase(),$response->getStatusCode());
+            $response = $this->getClient()->request('GET', '', $properties);
+            if ($response->getStatusCode() != 200) {
+                throw new OmdbApiException($response->getReasonPhrase(), $response->getStatusCode());
             }
-            if($deserialize) {
+            if ($deserialize) {
                 return $this->transform($response);
             }
             return $response;
@@ -129,7 +179,8 @@ abstract class BaseApiRequest
         }
     }
 
-    protected function deserialize(ResponseInterface $response, string $classname){
+    protected function deserialize(ResponseInterface $response, string $classname)
+    {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
         $reflectionExtractor = new ReflectionExtractor();

@@ -56,15 +56,19 @@ class SearchResult  extends Response
     }
 
     public function hasMore(){
-
-        if($this->totalResults < 10){
-            return false;
+        $pages = 1;
+        if($this->totalResults > 10){
+            $leftover = $this->totalResults % 10;
+            $pages =  ($this->totalResults - $leftover) / 10;
+            if($leftover > 0){
+                $pages += 1;
+            }
         }
-        $leftover = $this->totalResults % 10;
-        return $leftover > 0;
+
+        return ($this->currentPage < $pages);
     }
 
     public function getNextPage() :int{
-        return $this->currentPage +1;
+        return $this->currentPage+1;
     }
 }
