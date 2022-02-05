@@ -2,6 +2,7 @@
 
 use GuzzleHttp\HandlerStack;
 use jjtbsomhorst\omdbapi\model\response\SearchResult;
+use jjtbsomhorst\omdbapi\model\util\MediaType;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Storage\LaravelCacheStorage;
@@ -50,8 +51,7 @@ while($response->hasMore()){
 }
 error_log('we are done');
 echo count($results);
-
-$response = $c->byIdRequest('tt0076759','movies')->execute();
+$response = $c->byIdRequest('tt0076759',MediaType::Movies)->execute();
 echo "<br/>By id response";
 print_r($response);
 

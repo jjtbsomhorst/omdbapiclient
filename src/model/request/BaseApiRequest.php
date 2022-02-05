@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use jjtbsomhorst\omdbapi\exception\OmdbApiException;
+use jjtbsomhorst\omdbapi\model\util\MediaType;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\Psr6CacheStorage;
 use Kevinrob\GuzzleCache\Strategy\GreedyCacheStrategy;
@@ -89,7 +90,7 @@ abstract class BaseApiRequest
 
     public function episode(): BaseApiRequest
     {
-        $this->setkey("type", "episode");
+        $this->setkey("type", MediaType::Episodes);
         return $this;
     }
 
@@ -101,13 +102,13 @@ abstract class BaseApiRequest
 
     public function movie(): BaseApiRequest
     {
-        $this->setkey("type", "movie");
+        $this->setkey("type", MediaType::Movies->name);
         return $this;
     }
 
     public function series(): BaseApiRequest
     {
-        $this->setkey("type", "series");
+        $this->setkey("type", MediaType::Series->name);
         return $this;
     }
 

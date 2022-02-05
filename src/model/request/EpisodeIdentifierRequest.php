@@ -12,7 +12,7 @@ class EpisodeIdentifierRequest extends MovieIdentifierRequest
 
     public function __construct()
     {
-        $this->setKey('type','episode');
+        $this->episode();
     }
 
     public function transform(ResponseInterface $response)

@@ -15,6 +15,11 @@ use Symfony\Component\Serializer\Serializer;
 
 class MovieIdentifierRequest extends BaseIdentifierRequest
 {
+    public function __construct()
+    {
+        $this->movie();
+    }
+
     protected function transform(ResponseInterface $response)
     {
         return $this->deserialize($response,MovieResult::class);

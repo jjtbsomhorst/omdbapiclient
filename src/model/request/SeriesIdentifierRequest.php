@@ -12,7 +12,7 @@ class SeriesIdentifierRequest extends MovieIdentifierRequest
 
     public function __construct()
     {
-        $this->setKey('type','series');
+        $this->series();
     }
 
     public function transform(ResponseInterface $response)

@@ -3,12 +3,14 @@
 namespace jjtbsomhorst\omdbapi;
 
 
+
 use jjtbsomhorst\omdbapi\model\request\BaseIdentifierRequest;
 use jjtbsomhorst\omdbapi\model\request\EpisodeIdentifierRequest;
 use jjtbsomhorst\omdbapi\model\request\MovieIdentifierRequest;
 use jjtbsomhorst\omdbapi\model\request\MovieSearchRequest;
 use jjtbsomhorst\omdbapi\model\request\SeriesIdentifierRequest;
-use Psr\Cache\CacheItemInterface;
+use jjtbsomhorst\omdbapi\model\util\IdentifierType;
+use jjtbsomhorst\omdbapi\model\util\MediaType;
 use Psr\Cache\CacheItemPoolInterface;
 
 class OmdbApiClient
@@ -40,40 +42,38 @@ class OmdbApiClient
         return (new MovieSearchRequest())->apiKey($this->apiKey)->host(self::host)->search($term)->page($page)->cache($this->cacheMechanism)->proxy($this->proxy,$this->proxyport);
     }
 
-    public function byIdRequest(string $id, string $type): BaseIdentifierRequest
+    public function byIdRequest(string $id, MediaType $type): BaseIdentifierRequest
     {
-        return $this->byKeyRequest($id, 'id', $type);
+        return $this->byKeyRequest($id, IdentifierType::id, $type);
     }
 
-    private function byKeyRequest(string $identifier, string $identifierType, string $mediatype): ?BaseIdentifierRequest
+    private function byKeyRequest(string $identifier, IdentifierType $identifierType, MediaType $mediaType): ?BaseIdentifierRequest
     {
-        $request = null;
-
-        switch ($mediatype) {
-            case 'series':
+        switch ($mediaType) {
+            case MediaType::Series:
                 $request = new SeriesIdentifierRequest();
                 break;
-            case 'episode':
+            case MediaType::Episodes:
                 $request = new EpisodeIdentifierRequest();
                 break;
-            default:
+            case MediaType::Movies:
                 $request = new MovieIdentifierRequest();
                 break;
         }
         $request->apiKey($this->apiKey)->host(self::host)->cache($this->cacheMechanism)->proxy($this->proxy,$this->proxyport);
         switch ($identifierType) {
-            case 'id':
+            case IdentifierType::id:
                 return $request->byId($identifier);
-            case 'title':
+            case IdentifierType::title:
                 return $request->byTitle($identifier);
         }
         return null;
     }
 
 
-    public function byTitleRequest(string $title, string $type): BaseIdentifierRequest
+    public function byTitleRequest(string $title, MediaType $type): BaseIdentifierRequest
     {
-        return $this->byKeyRequest($title, 'title', $type);
+        return $this->byKeyRequest($title, IdentifierType::title, $type);
     }
 
     public function proxy(string $host, int $port): OmdbApiClient
