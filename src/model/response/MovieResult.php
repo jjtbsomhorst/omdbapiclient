@@ -101,7 +101,7 @@ class MovieResult extends BaseResponse
     /**
      * @return \DateTime
      */
-    public function getReleased(): \DateTime
+    public function getReleased(): ?\DateTime
     {
         return $this->released;
     }
