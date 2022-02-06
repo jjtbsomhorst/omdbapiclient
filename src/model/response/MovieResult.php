@@ -2,9 +2,7 @@
 
 namespace jjtbsomhorst\omdbapi\model\response;
 
-use GuzzleHttp\Psr7\Response;
-
-class MovieResult extends Response
+class MovieResult extends BaseResponse
 {
     private string $title;
 
@@ -451,5 +449,4 @@ class MovieResult extends Response
     {
         $this->response = $response;
     }
-
 }

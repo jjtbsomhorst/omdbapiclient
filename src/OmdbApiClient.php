@@ -37,9 +37,13 @@ class OmdbApiClient
         return $this;
     }
 
-    public function searchRequest(string $term, int $page = 1): MovieSearchRequest
+    public function searchRequest(string $term, int $page = 1,MediaType $type = null): MovieSearchRequest
     {
-        return (new MovieSearchRequest())->apiKey($this->apiKey)->host(self::host)->search($term)->page($page)->cache($this->cacheMechanism)->proxy($this->proxy,$this->proxyport);
+        $request = (new MovieSearchRequest())->apiKey($this->apiKey)->host(self::host)->search($term)->page($page)->cache($this->cacheMechanism)->proxy($this->proxy,$this->proxyport);
+        if($type != null){
+            $request->type($type);
+        }
+        return $request;
     }
 
     public function byIdRequest(string $id, MediaType $type): BaseIdentifierRequest
@@ -56,7 +60,7 @@ class OmdbApiClient
             case MediaType::Episodes:
                 $request = new EpisodeIdentifierRequest();
                 break;
-            case MediaType::Movies:
+            case MediaType::Movie:
                 $request = new MovieIdentifierRequest();
                 break;
         }

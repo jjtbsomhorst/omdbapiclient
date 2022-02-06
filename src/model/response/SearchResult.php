@@ -2,9 +2,7 @@
 
 namespace jjtbsomhorst\omdbapi\model\response;
 
-use GuzzleHttp\Psr7\Response;
-
-class SearchResult  extends Response
+class SearchResult extends BaseResponse
 {
     /**
      * @var SearchResultEntry[] $search
@@ -71,4 +69,15 @@ class SearchResult  extends Response
     public function getNextPage() :int{
         return $this->currentPage+1;
     }
+
+    public function jsonSerialize(): mixed
+    {
+        $array = parent::jsonSerialize();
+        $array['totalResults'] = $this->totalResults;
+        $array['currentPage'] = $this->currentPage;
+        $array['search'] = $this->getSearch();
+        return $array;
+    }
+
+
 }

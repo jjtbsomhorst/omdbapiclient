@@ -2,7 +2,9 @@
 
 namespace jjtbsomhorst\omdbapi\model\response;
 
-class MovieRating
+use JetBrains\PhpStorm\Internal\TentativeType;
+
+class MovieRating implements \JsonSerializable
 {
     private string $source;
     private string $value;
@@ -40,4 +42,11 @@ class MovieRating
     }
 
 
+    public function jsonSerialize(): mixed
+    {
+        return array(
+            'source' => $this->source,
+            'value' => $this->value
+        );
+    }
 }

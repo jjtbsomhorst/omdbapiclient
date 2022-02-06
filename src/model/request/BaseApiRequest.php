@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use jjtbsomhorst\omdbapi\exception\OmdbApiException;
+use jjtbsomhorst\omdbapi\model\response\BaseResponse;
 use jjtbsomhorst\omdbapi\model\util\MediaType;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\Psr6CacheStorage;
@@ -30,7 +31,7 @@ abstract class BaseApiRequest
     private string $apikey = "";
     private string $host;
     protected string $proxy;
-    private CacheItemPoolInterface $cachePool;
+    private ?CacheItemPoolInterface $cachePool;
 
     public function apiKey($key): BaseApiRequest
     {
@@ -54,7 +55,7 @@ abstract class BaseApiRequest
         return $this;
     }
 
-    public function cache($cache): BaseApiRequest
+    public function cache(?CacheItemPoolInterface $cache): BaseApiRequest
     {
         $this->cachePool = $cache;
         return $this;
@@ -102,7 +103,7 @@ abstract class BaseApiRequest
 
     public function movie(): BaseApiRequest
     {
-        $this->setkey("type", MediaType::Movies->name);
+        $this->setkey("type", MediaType::Movie->name);
         return $this;
     }
 
@@ -159,7 +160,7 @@ abstract class BaseApiRequest
         return new Client($props);
     }
 
-    public function execute(bool $deserialize = true): ResponseInterface
+    public function execute()
     {
 
         try {
@@ -171,14 +172,14 @@ abstract class BaseApiRequest
             if ($response->getStatusCode() != 200) {
                 throw new OmdbApiException($response->getReasonPhrase(), $response->getStatusCode());
             }
-            if ($deserialize) {
-                return $this->transform($response);
-            }
-            return $response;
+            return $this->transform($response);
+
         } catch (GuzzleException $e) {
             throw new OmdbApiException($e);
         }
     }
+
+    protected abstract function transform(ResponseInterface $response);
 
     protected function deserialize(ResponseInterface $response, string $classname)
     {
@@ -200,6 +201,11 @@ abstract class BaseApiRequest
         ];
         $jsonEncoder = new JsonEncoder();
         $serializer = new Serializer($normalizers, [$jsonEncoder]);
-        return $serializer->deserialize($response->getBody(), $classname, 'json');
+        /**
+         * @var BaseResponse $baseResponse
+         */
+        $baseResponse = $serializer->deserialize($response->getBody(), $classname, 'json');
+        $baseResponse->setStatusCode($response->getStatusCode());
+        return $baseResponse;
     }
 }

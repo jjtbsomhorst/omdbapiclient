@@ -2,9 +2,7 @@
 
 namespace jjtbsomhorst\omdbapi\model\response;
 
-use GuzzleHttp\Psr7\Response;
-
-class SearchResultEntry extends Response
+class SearchResultEntry implements \JsonSerializable
 {
     private string $title;
     private string $year;
@@ -92,4 +90,14 @@ class SearchResultEntry extends Response
         $this->poster = $poster;
     }
 
+    public function jsonSerialize(): mixed
+    {
+        return array(
+            'imdbID' => $this->getImdbID(),
+            'poster' => $this->getPoster(),
+            'year'=>$this->getYear(),
+            'title'=>$this->getTitle(),
+            'type'=>$this->getType()
+        );
+    }
 }
