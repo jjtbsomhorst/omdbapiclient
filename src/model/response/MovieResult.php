@@ -449,4 +449,35 @@ class MovieResult extends BaseResponse
     {
         $this->response = $response;
     }
+
+    public function jsonSerialize(): mixed
+    {
+       return array(
+           'title' => $this->getTitle(),
+           'year'=> $this->getYear(),
+           'rated' => $this->getRated(),
+           'released' => $this->getReleased(),
+           'runtime'=>$this->getRuntime(),
+           'genre' => explode(',',$this->getGenre()),
+           'director'=> $this->getDirector(),
+           'writer'=> $this->getWriter(),
+           'actors' => explode(',',$this->getActors()),
+           'plot' => $this->getPlot(),
+           'language'=> $this->getLanguage(),
+           'country' => $this->getLanguage(),
+           'awards' =>$this->getAwards(),
+           'poster' => $this->getPoster(),
+           'ratings' => $this->getRatings(),
+           'metascore' => $this->getMetascore(),
+           'imdbRating' => $this->getImdbRating(),
+           'imdbVotes' => $this->getImdbVotes(),
+           'imdbID' => $this->getImdbID(),
+           'type'=> $this->getType(),
+           'dvd' => $this->getDVD(),
+           'boxoffice' => $this->getBoxOffice(),
+           'production' => $this->getProduction(),
+           'website'=> $this->getWebsite()
+       );
+    }
+
 }
