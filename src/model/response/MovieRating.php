@@ -6,8 +6,8 @@ use JetBrains\PhpStorm\Internal\TentativeType;
 
 class MovieRating implements \JsonSerializable
 {
-    private string $source;
-    private string $value;
+    private string $source = "";
+    private string $value = "";
 
     /**
      * @return string

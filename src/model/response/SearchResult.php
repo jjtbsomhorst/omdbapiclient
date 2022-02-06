@@ -7,9 +7,9 @@ class SearchResult extends BaseResponse
     /**
      * @var SearchResultEntry[] $search
      */
-    private array $search;
-    private string $totalResults;
-    private int $currentPage;
+    private array $search = [];
+    private string $totalResults  = "";
+    private int $currentPage = 1;
 
     /**
      * @return SearchResultEntry[]

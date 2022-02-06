@@ -4,9 +4,9 @@ namespace jjtbsomhorst\omdbapi\model\response;
 
 class EpisodeResult extends MovieResult
 {
-    private string $seriesID;
-    private string $season;
-    private string $episode;
+    private string $seriesID = "";
+    private string $season = "";
+    private string $episode = "";
 
     /**
      * @return string

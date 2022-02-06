@@ -31,19 +31,21 @@ $page = 1;
 /**
  * @var $response SearchResult
  */
-$response = $c->searchRequest('Harry Potter',$page,MediaType::Movie)->execute();
-$results = [];
-while($response->hasMore()){
-    array_push($results,$response->getSearch());
-    $page = $response->getNextPage();
-    error_log('Lets get page '.$page);
-    /**
-     * @var $response SearchResult;
-     */
-    $response = $c->searchRequest('Harry Potter',$page,MediaType::Movie)->execute();
-}
+//$response = $c->searchRequest('Harry Potter',$page,MediaType::Movie)->execute();
+//$results = [];
+//while($response->hasMore()){
+//    array_push($results,$response->getSearch());
+//    $page = $response->getNextPage();
+//    error_log('Lets get page '.$page);
+//    /**
+//     * @var $response SearchResult;
+//     */
+//    $response = $c->searchRequest('Harry Potter',$page,MediaType::Movie)->execute();
+//}
 //error_log('we are done');
 //echo count($results);
 //$response = $c->byIdRequest('tt0076759',MediaType::Movies)->execute();
+
+$response = $c->byIdRequest('tt15431326',MediaType::Series)->execute();
 echo json_encode($response);
 

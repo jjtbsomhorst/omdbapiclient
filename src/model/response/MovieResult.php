@@ -4,51 +4,51 @@ namespace jjtbsomhorst\omdbapi\model\response;
 
 class MovieResult extends BaseResponse
 {
-    private string $title;
+    private string $title = "";
 
-    private string $year;
+    private string $year = "";
 
-    private string $rated;
+    private string $rated = "";
 
-    private \DateTime $released;
+    private ?\DateTime $released = null;
 
-    private string $runtime;
+    private string $runtime = "";
 
-    private string $genre;
+    private string $genre = "";
 
-    private string $director;
+    private string $director = "";
 
-    private string $writer;
+    private string $writer = "";
 
-    private string $actors;
+    private string $actors = "";
 
-    private string $plot;
+    private string $plot = "";
 
-    private string $language;
+    private string $language = "";
 
-    private string $country;
+    private string $country = "";
 
-    private string $awards;
+    private string $awards = "";
 
-    private string $poster;
+    private string $poster = "";
 
-    public array $ratings;
+    public array $ratings = [];
 
-    private string $metascore;
-    private string $imdbRating;
-    private string $imdbVotes;
-    private string $imdbID;
+    private string $metascore = "";
+    private string $imdbRating = "";
+    private string $imdbVotes = "";
+    private string $imdbID = "";
 
-    private string $type;
+    private string $type = "";
 
-    private string $dVD;
+    private string $dVD = "";
 
-    private string $boxOffice;
+    private string $boxOffice = "";
 
-    private string $production;
+    private string $production = "";
 
-    private string $website;
-    private string $response;
+    private string $website = "";
+    private string $response = "";
 
     /**
      * @return string

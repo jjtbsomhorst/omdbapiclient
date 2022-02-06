@@ -4,11 +4,11 @@ namespace jjtbsomhorst\omdbapi\model\response;
 
 class SearchResultEntry implements \JsonSerializable
 {
-    private string $title;
-    private string $year;
-    private string $imdbID;
-    private string $type;
-    private string $poster;
+    private string $title = "";
+    private string $year = "";
+    private string $imdbID = "";
+    private string $type = "";
+    private string $poster = "";
 
     /**
      * @return string
