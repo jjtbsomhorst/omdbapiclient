@@ -133,7 +133,7 @@ abstract class BaseApiRequest
         return $this->host;
     }
 
-    private function getClient(): Client
+    protected function getClient(): Client
     {
         $props = [];
         $props['base_uri'] = $this->getHost();

@@ -8,6 +8,7 @@ use jjtbsomhorst\omdbapi\model\request\BaseIdentifierRequest;
 use jjtbsomhorst\omdbapi\model\request\EpisodeIdentifierRequest;
 use jjtbsomhorst\omdbapi\model\request\MovieIdentifierRequest;
 use jjtbsomhorst\omdbapi\model\request\MovieSearchRequest;
+use jjtbsomhorst\omdbapi\model\request\PosterIdentifierRequest;
 use jjtbsomhorst\omdbapi\model\request\SeriesIdentifierRequest;
 use jjtbsomhorst\omdbapi\model\util\IdentifierType;
 use jjtbsomhorst\omdbapi\model\util\MediaType;
@@ -15,7 +16,8 @@ use Psr\Cache\CacheItemPoolInterface;
 
 class OmdbApiClient
 {
-    private const host = "http://www.omdbapi.com";
+    private const host = "https://www.omdbapi.com";
+    private const imageHost = "https://img.omdbapi.com";
 
     private string $apiKey = "";
     private ?CacheItemPoolInterface $cacheMechanism = null;
@@ -63,8 +65,16 @@ class OmdbApiClient
             case MediaType::Movie:
                 $request = new MovieIdentifierRequest();
                 break;
+            case MediaType::Poster:
+                $request = new PosterIdentifierRequest();
         }
-        $request->apiKey($this->apiKey)->host(self::host)->cache($this->cacheMechanism)->proxy($this->proxy,$this->proxyport);
+        $request->host(self::host);
+        if(get_class($request) === PosterIdentifierRequest::class){
+            error_log("its a poster request, lets set the image host!!");
+            $request->host(self::imageHost);
+        }
+
+        $request->apiKey($this->apiKey)->cache($this->cacheMechanism)->proxy($this->proxy,$this->proxyport);
         switch ($identifierType) {
             case IdentifierType::id:
                 return $request->byId($identifier);
